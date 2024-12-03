@@ -1,49 +1,119 @@
-
 <div
   id="menu"
-  class="bg-gray-900 min-h-screen z-10 text-slate-300 w-64 left-0 h-screen overflow-y-scroll">
-  <div id="logo" class="my-4 px-6">
-    <img class="text-lg md:text-2xl font-bold text-white"
-      src="https://i.ibb.co/JqmVCv1/logo.png" />
-    <span class="text-sm md:text-base font-bold"> Modulo</span><span
-      class="text-blue-500">Galpon</span>.
+  class="bg-gray-800 text-gray-300 w-64 h-screen overflow-y-auto flex flex-col shadow-lg">
+  <!-- Logo -->
+  <div id="logo" class="my-8 px-8 flex items-center">
+    <img src="https://i.ibb.co/JqmVCv1/logo.png" alt="Logo" class="h-12 w-auto">
+    <h1 class="ml-3 text-xl font-bold text-white">
+      Modulo<span class="text-blue-500">Galpon</span>
+    </h1>
   </div>
-  <div id="profile" class="px-6 py-10">
-    <p class="text-slate-500">Bienvenido de nuevo,</p>
-    <a href="#" class="inline-flex space-x-2 items-center">
-      <span>
-        <img
-          class="rounded-full w-8 h-8"
-          src="https://i.ibb.co/t8xY2mD/IMG-20231219-201015.jpg"
-          alt />
-      </span>
-      <span class="text-sm md:text-base font-bold"> User Frank Gallo</span>
-    </a>
-  </div>
-  <div id="nav" class="w-full px-6">
 
-    @for( item of menuItems; track $index ) {
-    <a
-      [routerLink]="item.path"
-      routerLinkActive="bg-blue-800"
-      class="w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 hover:bg-white/5 transition ease-linear duration-150">
-      <div class="flex flex-col">
-        <span class="text-lg font-bold leading-5 text-white">{{ item.title
-          }}</span>
-        <span class="text-sm text-white/50 hidden md:block">{{ item.path
-          }}</span>
-      </div>
+  <!-- Perfil del Usuario -->
+  <div id="profile" class="px-6 py-4 border-b border-gray-700">
+    <p class="text-sm text-gray-400 mb-2">Bienvenido de nuevo,</p>
+    <a href="#" class="flex items-center space-x-3">
+      <img
+        src="https://i.ibb.co/t8xY2mD/IMG-20231219-201015.jpg"
+        alt="User Avatar"
+        class="w-10 h-10 rounded-full shadow">
+      <span class="text-sm font-medium text-white">User Frank Gallo</span>
     </a>
-    }
-    <!-- Botón de Cerrar Sesión -->
-    <a href="#" (click)="logout()"
-      class="w-full px-2 mt-4 inline-flex space-x-2 items-center border-t border-slate-700 py-3 hover:bg-red-600 transition ease-linear duration-150">
-      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  </div>
+
+  <!-- Menú -->
+  <div id="nav" class="flex-1 px-4 py-4 space-y-2">
+    <ng-container *ngFor="let item of menuItems; let i = index">
+      <!-- Dropdown para ítems con hijos -->
+      <div *ngIf="item.children && item.children.length; else singleItem">
+        <div
+          class="flex justify-between items-center px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-md cursor-pointer transition"
+          (click)="toggleDropdown(i)">
+          <span class="font-medium text-white">{{ item.title || item.path }}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="w-5 h-5 text-gray-300 transition-transform duration-200"
+            [class.rotate-180]="dropdownIndex === i">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        <!-- Submenú -->
+        <div
+          *ngIf="dropdownIndex === i"
+          class="pl-6 mt-1 space-y-1 text-gray-400">
+          <ng-container *ngFor="let child of item.children; let j = index">
+            <div *ngIf="child.children && child.children.length; else childItem">
+              <div
+                class="flex justify-between items-center px-3 py-2 hover:bg-gray-600 rounded-md cursor-pointer transition"
+                (click)="toggleSubDropdown(i, j)">
+                <span class="text-sm font-medium text-gray-300">
+                  {{ child.title || child.path }}
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  class="w-4 h-4 text-gray-300 transition-transform duration-200"
+                  [class.rotate-180]="subDropdownIndex[i] === j">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <!-- Sub-submenú -->
+              <div
+                *ngIf="subDropdownIndex[i] === j"
+                class="pl-6 mt-1 space-y-1 text-gray-400">
+                <a
+                  *ngFor="let grandChild of child.children"
+                  [routerLink]="grandChild.path"
+                  routerLinkActive="bg-blue-800 text-white"
+                  class="block px-3 py-2 text-sm rounded-md hover:bg-gray-600 hover:text-white transition">
+                  {{ grandChild.title || grandChild.path }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Ítem sin sub-submenú -->
+            <ng-template #childItem>
+              <a
+                [routerLink]="child.path"
+                routerLinkActive="bg-blue-800 text-white"
+                class="block px-3 py-2 text-sm rounded-md hover:bg-gray-600 hover:text-white transition">
+                {{ child.title || child.path }}
+              </a>
+            </ng-template>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Ítem sin submenús -->
+      <ng-template #singleItem>
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-blue-800 text-white"
+          class="block px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-md transition">
+          {{ item.title || item.path }}
+        </a>
+      </ng-template>
+    </ng-container>
+  </div>
+
+  <!-- Botón de Cerrar Sesión -->
+  <div class="px-4 py-4 border-t border-gray-700">
+    <button
+      (click)="logout()"
+      class="w-full flex items-center justify-center space-x-2 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H5a3 3 0 01-3-3V7a3 3 0 013-3h5a3 3 0 013 3v1" />
       </svg>
-      <span class="text-lg font-bold text-white">Cerrar sesión</span>
-    </a>
+      <span>Cerrar sesión</span>
+    </button>
   </div>
 </div>

@@ -2,57 +2,82 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'dashboard',
+    path: 'Dashboard',
+    title: 'Dashboard General',
+    loadComponent: () =>
+      import('./dashboard/pages/dashboard/dashboard.component'),
+  },
+  {
+    path: 'Modulo Galpon',
     loadComponent: () => import('./dashboard/dashboard.component'),
     children: [
       {
-        path: 'dashboard-nph',
+        path: 'Dashboard',
         title: 'Dashboard',
-        loadComponent: () => import('./dashboard/pages/dashboard/dashboard.component'),
+        loadComponent: () =>
+          import('./dashboard/pages/dashboard/dashboard.component'),
       },
       {
-        path: 'change-detection',
-        title: 'Proveedor',
-        loadComponent: () => import('./dashboard/pages/change-detection/change-detection.component'),
+        path: 'Masters',
+        title: 'Maestros',
+        loadComponent: () =>
+          import('./dashboard/pages/masters/masters.component'),
+        children: [
+          {
+            path: 'Dashboard',
+            title: 'Dashboard',
+            loadComponent: () =>
+              import('./dashboard/pages/dashboard/dashboard.component'),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: 'Modulo Bienestar Comun',
+    loadComponent: () => import('./dashboard/dashboard.component'),
+    children: [
+      {
+        path: 'Dashboard',
+        title: 'Dashboard',
+        loadComponent: () =>
+          import('./dashboard/pages/dashboard/dashboard.component'),
       },
       {
-        path: 'control-flow',
-        title: 'Galpon',
-        loadComponent: () => import('./dashboard/pages/control-flow/control-flow.component'),
+        path: 'Masters',
+        title: 'Maestros',
+        loadComponent: () =>
+          import('./dashboard/pages/masters/masters.component'),
+      },
+    ],
+  },
+  {
+    path: 'Modulo-Psicologia',
+    title: 'Modulo Psicologia',
+    loadComponent: () => import('./dashboard/dashboard.component'),
+    children: [
+      {
+        path: 'Dashboard',
+        title: 'Dashboard',
+        loadComponent: () =>
+          import('./dashboard/pages/dashboard/dashboard.component'),
       },
       {
-        path: 'defer-options',
-        title: 'Alimento',
-        loadComponent: () => import('./dashboard/pages/defer-options/defer-options.component'),
+        path: 'Masters',
+        title: 'Maestros',
+        loadComponent: () =>
+          import('./dashboard/pages/masters/masters.component'),
       },
       {
-        path: 'defer-views',
-        title: 'Vacuna',
-        loadComponent: () => import('./dashboard/pages/defer-views/defer-views.component'),
+        path: '',
+        redirectTo: 'Moduls',
+        pathMatch: 'full',
       },
-      {
-        path: 'user',
-        title: 'Casa',
-        loadComponent: () => import('./dashboard/pages/user/user.component'),
-      },
-      {
-        path: 'user-list',
-        title: 'Producto',
-        loadComponent: () => import('./dashboard/pages/users/users.component'),
-      },
-      {
-        path: 'view-transition',
-        title: 'Ciclo de Vida',
-        loadComponent: () => import('./dashboard/pages/view-transition/view-transition.component'),
-      },
-      {
-        path:'', redirectTo: 'dashboard-nph', pathMatch: 'full',
-      }
-    ]
+    ],
   },
   {
     path: '',
-    redirectTo: '/dashboard',
-    pathMatch: 'full'
-  }
+    redirectTo: '/Dashboard',
+    pathMatch: 'full',
+  },
 ];
