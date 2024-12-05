@@ -1,67 +1,113 @@
 import { Component } from '@angular/core';
-import { routes } from '../../app.routes';
-import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+
+// Menú principal con estructura jerárquica
+const MENU_ITEMS = [
+
+  // Dashboard General
+  {
+    title: 'Dashboard',
+    path: '/Modulo-Galpon',
+    icon: 'dashboard',
+  },
+
+  // Modulo Galpon
+  {
+    title: 'Modulo Galpon',
+    path: '/Modulo-Galpon',
+    children: [
+      {
+        title: 'Maestros',
+        path: '/Modulo-Galpon/Masters',
+        children: [
+          {
+            title: 'Tema',
+            path: '/Modulo-Galpon/Masters',
+            children: [
+              { title: 'Tema Activos', path: '/Modulo-Galpon/Tema' },
+            ],
+          },
+          {
+            title: 'Proveedor',
+            children: [
+              { title: 'Proveedor Activos', path: '/Modulo-Galpon/Proveedor' },
+            ],
+          },
+        ],
+      },
+      { title: 'Estadísticas', path: '/Modulo-Galpon/Estadisticas' },
+    ],
+  },
+
+  // Modulo Bienestar Comun
+  {
+    title: 'Modulo Bienestar Comun',
+    path: '/Modulo-Bienestar-Comun',
+    children: [
+      { title: 'Dashboard', path: '/Modulo-Bienestar-Comun/Dashboard' },
+      { title: 'Masters', path: '/Modulo-Bienestar-Comun/Masters' },
+    ],
+  },
+
+  // Modulo Psicologia
+  {
+    title: 'Modulo Psicologia',
+    path: '/Modulo-Psicologia',
+    children: [
+      { title: 'Dashboard', path: '/Modulo-Bienestar-Comun/Dashboard' },
+      { title: 'Masters', path: '/Modulo-Bienestar-Comun/Masters' },
+    ],
+  },
+];
 
 @Component({
   selector: 'app-sidemenu',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule , HttpClientModule],
   templateUrl: './sidemenu.component.html',
-  styleUrls: ['./sidemenu.component.css']
+  styleUrls: ['./sidemenu.component.css'],
 })
 export class SidemenuComponent {
-  /**
-   * Lista de ítems del menú, obtenidos de las rutas de la aplicación.
-   * Filtra rutas con path definido y elimina las que contienen parámetros dinámicos.
-   */
-  public menuItems = routes
-    .map((route) => ({
-      ...route,
-      children: route.children?.filter((child) => child.path && !child.path.includes(':')),
-    }))
-    .filter((route) => route.path);
+  dropdownIndex: number | null = null;
+  subDropdownIndex: Map<number, number | null> = new Map();
+  grandSubDropdownIndex: Map<number, Map<number, number | null>> = new Map();
+  menuItems = MENU_ITEMS;
 
-  /**
-   * Índice del menú desplegable actualmente abierto. Null si ninguno está abierto.
-   */
-  public dropdownIndex: number | null = null;
+  constructor(private router: Router) {}
 
-  /**
-   * Índices de submenús desplegables anidados, asociados a cada menú principal.
-   * Utiliza un objeto para rastrear el estado de submenús por cada menú principal.
-   */
-  public subDropdownIndex: { [key: number]: number | null } = {};
-
-  /**
-   * Alterna la visibilidad del menú desplegable principal.
-   * @param index Índice del menú que se desea alternar.
-   */
+  // Alternar Dropdown principal
   toggleDropdown(index: number): void {
     this.dropdownIndex = this.dropdownIndex === index ? null : index;
   }
 
-  /**
-   * Alterna la visibilidad del submenú desplegable anidado.
-   * @param parentIndex Índice del menú principal.
-   * @param childIndex Índice del submenú que se desea alternar.
-   */
+  // Alternar Submenú
   toggleSubDropdown(parentIndex: number, childIndex: number): void {
-    if (!this.subDropdownIndex[parentIndex]) {
-      this.subDropdownIndex[parentIndex] = null;
-    }
-    this.subDropdownIndex[parentIndex] =
-      this.subDropdownIndex[parentIndex] === childIndex ? null : childIndex;
+    const current = this.subDropdownIndex.get(parentIndex);
+    this.subDropdownIndex.set(parentIndex, current === childIndex ? null : childIndex);
   }
 
-  /**
-   * Acción para cerrar la sesión del usuario.
-   * Aquí puedes redirigir al usuario o limpiar datos relacionados con la sesión.
-   */
+  // Alternar Sub-Submenú
+  toggleGrandSubDropdown(parentIndex: number, childIndex: number, grandChildIndex: number): void {
+    if (!this.grandSubDropdownIndex.has(parentIndex)) {
+      this.grandSubDropdownIndex.set(parentIndex, new Map());
+    }
+    const subMap = this.grandSubDropdownIndex.get(parentIndex)!;
+    const current = subMap.get(childIndex);
+    subMap.set(childIndex, current === grandChildIndex ? null : grandChildIndex);
+  }
+
+  // Verificar si una ruta está activa
+  isRouteActive(path: string): boolean {
+    return this.router.url.startsWith(path);
+  }
+
+  // Cerrar sesión
   logout(): void {
     console.log('Sesión cerrada');
-    // Implementa la lógica de cierre de sesión según sea necesario, como:
-    // - Redirigir a la página de inicio de sesión.
-    // - Limpiar datos almacenados en el estado global o localStorage.
+    localStorage.removeItem('authToken');
+    this.router.navigate(['/login']);
   }
 }

@@ -1,19 +1,30 @@
-<nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-  <div
-    class="max-w-screen-xl flex flex-wrap items-center justify-between ml-0 p-4">
-    <a href="#" class="flex items-left space-x-3 rtl:space-x-reverse">
-      <h1
-        class="self-left text-4xl font-semibold whitespace-nowrap dark:text-white">
-        Sistema
-        de NPH</h1>
+<nav class="bg-gray-800 border-b border-gray-700">
+  <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
+    <!-- Logo -->
+    <a href="#" class="flex items-center">
+      <h1 class="text-2xl sm:text-4xl font-bold text-white">Sistema NPH</h1>
     </a>
 
-    <button type="button"
-      class="flex items-center rounded-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-      <img class="h-10 w-10 rounded-full"
-        src="https://i.ibb.co/t8xY2mD/IMG-20231219-201015.jpg"
-        alt="User avatar">
-      <span class="text-white ml-2">Frank Gallo Sanchez</span>
+    <!-- Botón Hamburguesa para Móviles -->
+    <button
+      class="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-600 sm:hidden"
+      (click)="toggleMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
     </button>
+    <!-- Opciones de Usuario -->
+    <div class="relative">
+      <button
+        class="flex items-center rounded-full bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600"
+        (click)="toggleMenu()">
+        <img class="h-10 w-10 rounded-full" src="https://i.ibb.co/t8xY2mD/IMG-20231219-201015.jpg" alt="User avatar">
+        <span class="ml-2 text-gray-300 text-sm font-medium">Frank Gallo Sánchez</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-gray-400" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
   </div>
 </nav>

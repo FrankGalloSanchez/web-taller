@@ -8,5 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  toggleMenu() {
 
+    // Add your menu toggle logic here
+
+    console.log('Menu toggled');
+
+  }
 }
