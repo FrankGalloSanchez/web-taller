@@ -10,6 +10,7 @@ import { Issue } from '../../defer-options/model/issue';
 export class IssueService {
   private apiUrl = 'https://congenial-space-waffle-gjpqr74vvrxhpjp-8080.app.github.dev/tema';
 
+
   constructor(private http: HttpClient) {}
 
   getIssues(): Observable<Issue[]> {
