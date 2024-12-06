@@ -8,7 +8,7 @@ import { Issue } from '../../defer-options/model/issue';
   providedIn: 'root',
 })
 export class IssueService {
-  private apiUrl = 'https://8080-vallegrande-as222s5prs1-nsd9n4rnm1q.ws-us117.gitpod.io/tema';
+  private apiUrl = 'https://congenial-space-waffle-gjpqr74vvrxhpjp-8080.app.github.dev/tema';
 
   constructor(private http: HttpClient) {}
 
